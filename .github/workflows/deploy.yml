@@ -17,11 +17,18 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           username: ${{secrets.SSH_USERNAME}}
           script: |
-            cd /var/www/laravel
+            # Change directory to your Laravel application path
+            cd /var/www/html/LaravelAPI  # แก้ไข path นี้ตามที่คุณใช้จริง
+            # Pull the latest code from the main branch
             git pull origin main
+            # Install PHP dependencies
             composer install --no-interaction --prefer-dist --optimize-autoloader
+            # Run Laravel migrations
             php artisan migrate --force
+            # Cache configuration, routes, and views
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
+            # Optional: Restart the web server
+            sudo systemctl restart nginx
             echo 'Deployment successful to DigitalOcean'
